@@ -6,8 +6,9 @@ import Searchbar from './components/Searchbar.jsx'
 import MovieCard from './components/MovieCard.jsx'
 import Nav from './components/Nav.jsx'
 import React, { useState, useEffect } from 'react'
-import { Routes, Route,useLocation } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import Contact from './components/Contact.jsx'
+import About from './components/About.jsx'
 // import { useLocation } from 'react-router-dom';
 
 
@@ -26,7 +27,7 @@ function App() {
       setLoading(false);
     }
     catch (error) {
-
+      
       console.error("Error fetching movie data:", error);
       setLoading(false);
     }
@@ -38,23 +39,24 @@ function App() {
       <Nav />
 
       <Routes>
-        <Route path="/contact" element={<Contact />} />
         <Route path='/' element={
           <>
             <div>
               <div className='bg'>
                 <Searchbar SearchMovie={SearchMovie}
-                 setSearchMovie={setSearchMovie} 
-                 fetchMovieData={fetchMovieData} />
-                 
+                  setSearchMovie={setSearchMovie}
+                  fetchMovieData={fetchMovieData} />
+
                 <MovieCard AllmovieData={AllmovieData}
-                 Loading={Loading} />
+                  Loading={Loading} />
               </div>
             </div>
 
           </>
         } />
-
+        <Route path="/contact" element={<Contact />} />
+        <Route path='/about' element={<About />} />
+        
       </Routes>
 
 
