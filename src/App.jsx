@@ -27,7 +27,7 @@ function App() {
       setLoading(false);
     }
     catch (error) {
-      
+
       console.error("Error fetching movie data:", error);
       setLoading(false);
     }
@@ -41,22 +41,22 @@ function App() {
       <Routes>
         <Route path='/' element={
           <>
-            <div>
-              <div className='bg'>
+          
+            <div className='bg'>
+              <div>
                 <Searchbar SearchMovie={SearchMovie}
                   setSearchMovie={setSearchMovie}
                   fetchMovieData={fetchMovieData} />
-
                 <MovieCard AllmovieData={AllmovieData}
                   Loading={Loading} />
               </div>
             </div>
-
+          
           </>
         } />
         <Route path="/contact" element={<Contact />} />
         <Route path='/about' element={<About />} />
-        
+
       </Routes>
 
 

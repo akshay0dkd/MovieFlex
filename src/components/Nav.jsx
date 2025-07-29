@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 
 function Nav() {
     return (
-        <nav className="bg-red-800 relative text-white px-4 py-3 flex justify-between w-full h-18">
+        <nav className="flex justify-between bg-[#164e63] px-4 py-3 w-full h-18 text-white">
             <h1 className="font-bold text-xl">MOVIE App</h1>
             <ul className="flex gap-4">
                 <li><Link to="/">Home</Link></li>

@@ -42,10 +42,12 @@ const Contact = () => {
                 crossorigin="anonymous"
                 referrerpolicy="no-referrer"
             /> */}
-            <div className="flex justify-center items-center -px-4 py-12 min-h-screen bg">
+            <div className="flex justify-center items-center bg-[#0f172a] px-6 md:px-4 md:py-12 min-h-screen">
                 <div className="bg-fuchsia-300 p-8 rounded-2xl w-full max-w-xl gshadow-xl">
                     <h2 className="mb-6 font-bold text-gray-800 text-3xl text-center">Contact Me</h2>
-                    <form onSubmit={handleSubmit} className="space-y-5">
+                   
+                    <form action="mailto:your-akshaybhiogade02@gmail.com" method="post" enctype="text/plain"
+                        onSubmit={handleSubmit} className="space-y-5">
                         <div>
                             <label className="block mb-1 text-gray-600">Name</label>
                             <input
