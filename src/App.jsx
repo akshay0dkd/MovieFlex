@@ -1,5 +1,3 @@
-// //  e42c733
-// const API_URL = 'http://www.omdbapi.com/?apikey=e42c733'
 
 import './App.css'
 import Searchbar from './components/Searchbar.jsx'
@@ -9,6 +7,7 @@ import React, { useState, useEffect } from 'react'
 import { Routes, Route, useLocation } from 'react-router-dom';
 import Contact from './components/Contact.jsx'
 import About from './components/About.jsx'
+
 // import { useLocation } from 'react-router-dom';
 
 
@@ -17,21 +16,23 @@ function App() {
   const [SearchMovie, setSearchMovie] = useState("");
   const [Loading, setLoading] = useState(false);
 
-  const fetchMovieData = async () => {
-    try {
-      setLoading(true)
-      const res = await fetch(`https://omdbapi.com/?s=${SearchMovie}&apikey=a1de9591`);
-      const data = await res.json();
-      console.log(data.Search);
-      setAllmovieData(data.Search || []); // Use an empty array if no results found
-      setLoading(false);
-    }
-    catch (error) {
-
-      console.error("Error fetching movie data:", error);
-      setLoading(false);
-    }
+ const fetchMovieData = async () => {
+  try {
+    const apiKey = "8a5159ae66789c60b6417ade00adc19e";
+    const res = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${encodeURIComponent(SearchMovie)}`);
+    const data = await res.json();
+    console.log(data.results); // Corrected
+    setAllmovieData(data.results || []);
+    setLoading(false);
+  } catch (error) {
+    console.error("Error fetching movie data:", error);
+    setLoading(false);
   }
+};
+ 
+
+
+
 
   return (
     <>
@@ -41,7 +42,7 @@ function App() {
       <Routes>
         <Route path='/' element={
           <>
-          
+
             <div className='bg'>
               <div>
                 <Searchbar SearchMovie={SearchMovie}
@@ -51,17 +52,17 @@ function App() {
                   Loading={Loading} />
               </div>
             </div>
-          
+
           </>
         } />
         <Route path="/contact" element={<Contact />} />
         <Route path='/about' element={<About />} />
-
+      
+        
       </Routes>
 
-
     </>
-  )
+  );
 }
 
-export default App
+export default App;
