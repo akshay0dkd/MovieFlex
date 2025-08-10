@@ -54,24 +54,7 @@ bash
 Copy
 Edit
 npm run dev
-📦 Folder Structure
-css
-Copy
-Edit
-MovieFlex/
-├── src/
-│   ├── components/
-│   │   ├── MovieCard.jsx
-│   │   ├── Searchbar.jsx
-│   │   ├── Nav.jsx
-│   ├── App.jsx
-│   ├── main.jsx
-├── public/
-├── .env
-├── index.html
-├── package.json
-📸 Screenshots
-<img src="https://i.imgur.com/YOUR_SCREENSHOT_LINK.png" width="700"/>
+
 📬 Connect With Me
 🔗 LinkedIn
 
