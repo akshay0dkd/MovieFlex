@@ -30,30 +30,7 @@
 
 ---
 
-## 🧰 Installation (For Dev Use)
 
-1. Clone the repo:
-   ```bash
-   git clone https://github.com/akshay0dkd/MovieFlex.git
-   cd MovieFlex
-Install dependencies:
-
-bash
-Copy
-Edit
-npm install
-Set up your .env file:
-
-bash
-Copy
-Edit
-VITE_TMDB_API_KEY=your_tmdb_api_key
-Start development server:
-
-bash
-Copy
-Edit
-npm run dev
 
 📬 Connect With Me
 🔗 LinkedIn
