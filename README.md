@@ -32,20 +32,3 @@
 
 
 
-📬 Connect With Me
-🔗 LinkedIn
-
-🛠 GitHub
-
-⭐ Credits
-Movie data & trailers provided by TMDB API
-
-📄 License
-MIT License – free to use, modify, and share.
-
-yaml
-Copy
-Edit
-
----
- 
