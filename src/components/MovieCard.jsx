@@ -96,14 +96,14 @@ function MovieCard({ Loading, AllmovieData }) {
                     ▶ Watch Trailer
                   </button>
 
-                  <a
+                  {/* <a
                     href={movieLink}
                     target="_blank"
                     rel="noreferrer"
                     className="inline-block mt-3 text-blue-400 text-sm underline"
                   >
                     🔗 More Info
-                  </a>
+                  </a> */}
                 </div>
               </div>
             );
