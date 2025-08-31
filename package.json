@@ -2,7 +2,7 @@
   "name": "movieflix",
   "private": true,
   "version": "0.0.0",
-  "homepage": "https://akshay0dkd.github.io/MovieFlex/",
+  "homepage": ".",
   "type": "module",
   "scripts": {
     "dev": "vite",
