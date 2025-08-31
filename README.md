@@ -4,9 +4,7 @@
 
 ---
 
-## 🚀 Live Demo
 
-🔗 [Visit MovieFlex](https://akshay0dkd.github.io/MovieFlex/)
 
 ---
 
