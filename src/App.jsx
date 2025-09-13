@@ -8,7 +8,7 @@ import { Routes, Route, useLocation } from 'react-router-dom';
 import Contact from './components/Contact.jsx'
 import About from './components/About.jsx'
 
-// import { useLocation } from 'react-router-dom';
+
 
 
 function App() {
@@ -19,7 +19,7 @@ function App() {
  const fetchMovieData = async () => {
   try {
     const apiKey = "8a5159ae66789c60b6417ade00adc19e";
-    const res = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${encodeURIComponent(SearchMovie)}`);
+    const res = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${process.env.TMDB_KEY}&query=${encodeURIComponent(SearchMovie)}`);
     const data = await res.json();
     console.log(data.results); // Corrected
     setAllmovieData(data.results || []);

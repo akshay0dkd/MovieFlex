@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 
 // Helper: Get YouTube trailer link
-const getVideoLink = async (movieId, apiKey) => {
+const getVideoLink = async (movieId, process.env.TMDB_KEY) => {
   try {
     const res = await fetch(
-      `https://api.themoviedb.org/3/movie/${movieId}/videos?api_key=${apiKey}`
+      `https://api.themoviedb.org/3/movie/${movieId}/videos?api_key=${process.env.TMDB_KEY}`
     );
     const data = await res.json();
     const trailer = data.results.find(
@@ -21,13 +21,13 @@ function MovieCard({ Loading, AllmovieData }) {
   const [castList, setCastList] = useState({});
   const [selectedTrailer, setSelectedTrailer] = useState(null); // URL of trailer
   const [isModalOpen, setIsModalOpen] = useState(false); // modal state
-  const apiKey = '8a5159ae66789c60b6417ade00adc19e';
+ 
 
   // Fetch cast list
   const fetchCast = async (movieId) => {
     try {
       const res = await fetch(
-        `https://api.themoviedb.org/3/movie/${movieId}/credits?api_key=${apiKey}`
+        `https://api.themoviedb.org/3/movie/${movieId}/credits?api_key=${process.env.TMDB_KEY}`
       );
       const data = await res.json();
       const castNames = data.cast.slice(0, 3).map((actor) => actor.name).join(',');
@@ -39,7 +39,7 @@ function MovieCard({ Loading, AllmovieData }) {
 
   // Load and show trailer in modal
   const openTrailerModal = async (id) => {
-    const link = await getVideoLink(id, apiKey);
+    const link = await getVideoLink(id, process.env.TMDB_KEY);
     if (link) {
       setSelectedTrailer(link);
       setIsModalOpen(true);
