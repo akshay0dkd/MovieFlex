@@ -12,11 +12,18 @@ function App() {
   const [SearchMovie, setSearchMovie] = useState("");
   const [Loading, setLoading] = useState(false);
 
+  const apiKey = import.meta.env.VITE_TMDB_KEY;
+
   // 🔹 Fetch popular movies on page load
   const fetchPopularMovies = async () => {
+    if (!apiKey) {
+      console.error("TMDB API key is missing. Please set VITE_TMDB_KEY in your .env file.");
+      setLoading(false);
+      return;
+    }
     setLoading(true);
     try {
-      const res = await fetch(`/api/movies/popular`);
+      const res = await fetch(`https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}`);
       const data = await res.json();
       setAllmovieData(data.results || []);
     } catch (error) {
@@ -28,6 +35,10 @@ function App() {
 
   // 🔹 Fetch searched movies
   const fetchMovieData = async () => {
+    if (!apiKey) {
+      console.error("TMDB API key is missing. Please set VITE_TMDB_KEY in your .env file.");
+      return;
+    }
     if (!SearchMovie.trim()) {
       fetchPopularMovies(); // if no search term, show popular
       return;
@@ -35,7 +46,7 @@ function App() {
 
     setLoading(true);
     try {
-      const res = await fetch(`/api/movies?query=${encodeURIComponent(SearchMovie)}`);
+      const res = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${encodeURIComponent(SearchMovie)}`);
       const data = await res.json();
       setAllmovieData(data.results || []);
     } catch (error) {

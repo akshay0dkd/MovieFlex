@@ -1,26 +1,64 @@
 import React, { useEffect, useState } from "react";
 import { fetchMovieCast, fetchMovieTrailer } from "../services/movieService";
 
+const openAIKey = import.meta.env.VITE_OPENAI_API_KEY;
+
 function MovieCard({ Loading, AllmovieData }) {
   const [castList, setCastList] = useState({});
   const [selectedTrailer, setSelectedTrailer] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [aiSummaries, setAiSummaries] = useState({});
+  const [isSummaryLoading, setIsSummaryLoading] = useState({});
 
   const fetchAISummary = async (id, title, overview) => {
-    try {
-      const res = await fetch("/api/ai", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title, overview }),
-      });
-      const data = await res.json();
+    if (!openAIKey) {
+      console.error("OpenAI API key is missing. Please set VITE_OPENAI_API_KEY in your .env file.");
       setAiSummaries((prev) => ({
         ...prev,
-        [id]: data.summary || "AI could not generate summary",
+        [id]: "AI functionality is not configured.",
       }));
+      return;
+    }
+
+    setIsSummaryLoading((prev) => ({ ...prev, [id]: true }));
+
+    try {
+      const res = await fetch("https://api.openai.com/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${openAIKey}`,
+        },
+        body: JSON.stringify({
+          model: "gpt-3.5-turbo",
+          messages: [
+            {
+              role: "system",
+              content: "You are a helpful assistant that summarizes movie plots.",
+            },
+            {
+              role: "user",
+              content: `Provide a short, engaging summary for the movie titled \"${title}\" based on this overview: ${overview}`,
+            },
+          ],
+          max_tokens: 100,
+        }),
+      });
+
+      if (!res.ok) {
+        throw new Error(`OpenAI API error: ${res.statusText}`);
+      }
+
+      const data = await res.json();
+      const summary = data.choices[0]?.message?.content?.trim() || "AI could not generate summary.";
+      
+      setAiSummaries((prev) => ({ ...prev, [id]: summary }));
+
     } catch (err) {
       console.error("Error fetching AI summary:", err);
+      setAiSummaries((prev) => ({ ...prev, [id]: "Failed to fetch AI summary." }));
+    } finally {
+      setIsSummaryLoading((prev) => ({ ...prev, [id]: false }));
     }
   };
 
@@ -40,14 +78,15 @@ function MovieCard({ Loading, AllmovieData }) {
   };
 
   useEffect(() => {
+    const newCast = {};
     AllmovieData.forEach((movie) => {
       if (movie.id && !castList[movie.id]) {
-        fetchMovieCast(movie.id).then((cast) =>
-          setCastList((prev) => ({ ...prev, [movie.id]: cast }))
-        );
+         fetchMovieCast(movie.id).then(cast => {
+            setCastList(prev => ({...prev, [movie.id]: cast}))
+         })
       }
     });
-  }, [AllmovieData]);
+  }, [AllmovieData, castList]);
 
   return (
     <div>
@@ -61,7 +100,7 @@ function MovieCard({ Loading, AllmovieData }) {
         </div>
       ) : (
         <div className="flex flex-wrap px-4 lg:px-10">
-          {AllmovieData.map((item, index) => {
+          {AllmovieData.map((item) => {
             const { id, title, release_date, poster_path, vote_average, overview } = item;
             const posterUrl = poster_path
               ? `https://image.tmdb.org/t/p/w500${poster_path}`
@@ -69,7 +108,7 @@ function MovieCard({ Loading, AllmovieData }) {
             const cast = castList[id] || "Loading...";
 
             return (
-              <div key={index} className="p-2 sm:w-full md:w-1/3 xl:w-1/4">
+              <div key={id} className="p-2 sm:w-full md:w-1/3 xl:w-1/4">
                 <div className="bg-[#1e1e2e] shadow-lg p-4 border border-gray-700 rounded-2xl text-white hover:scale-[1.02] transition-all">
                   <img
                     className="mb-3 rounded-lg w-full h-[400px] object-cover"
@@ -78,7 +117,7 @@ function MovieCard({ Loading, AllmovieData }) {
                   />
                   <h2 className="font-bold text-lg">{title}</h2>
                   <p className="text-sm">📅 {release_date?.slice(0, 4)}</p>
-                  <p className="text-sm">⭐ Rating: {vote_average}</p>
+                  <p className="text-sm">⭐ Rating: {vote_average?.toFixed(1)}</p>
                   <p className="text-sm">🎭 Cast: {cast}</p>
                   <p className="mt-2 text-sm">📝 {overview?.slice(0, 80)}...</p>
 
@@ -92,8 +131,9 @@ function MovieCard({ Loading, AllmovieData }) {
                   <button
                     onClick={() => fetchAISummary(id, title, overview)}
                     className="bg-green-600 hover:bg-green-700 mt-4 ml-2 px-3 py-1 rounded-md text-white text-sm"
+                    disabled={isSummaryLoading[id]}
                   >
-                    🤖 AI Summary
+                    {isSummaryLoading[id] ? 'Generating...' : '🤖 AI Summary'}
                   </button>
 
                   {aiSummaries[id] && (
