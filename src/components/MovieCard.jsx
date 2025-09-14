@@ -1,50 +1,36 @@
-import React, { useEffect, useState } from 'react';
-
-// Helper: Get YouTube trailer link
-const getVideoLink = async (movieId, process.env.TMDB_KEY) => {
-  try {
-    const res = await fetch(
-      `https://api.themoviedb.org/3/movie/${movieId}/videos?api_key=${process.env.TMDB_KEY}`
-    );
-    const data = await res.json();
-    const trailer = data.results.find(
-      (video) => video.site === 'YouTube' && video.type === 'Trailer'
-    );
-    return trailer ? `https://www.youtube.com/embed/${trailer.key}` : null;
-  } catch (error) {
-    console.error('Error fetching trailer:', error);
-    return null;
-  }
-};
+import React, { useEffect, useState } from "react";
+import { fetchMovieCast, fetchMovieTrailer } from "../services/movieService";
 
 function MovieCard({ Loading, AllmovieData }) {
   const [castList, setCastList] = useState({});
-  const [selectedTrailer, setSelectedTrailer] = useState(null); // URL of trailer
-  const [isModalOpen, setIsModalOpen] = useState(false); // modal state
- 
+  const [selectedTrailer, setSelectedTrailer] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [aiSummaries, setAiSummaries] = useState({});
 
-  // Fetch cast list
-  const fetchCast = async (movieId) => {
+  const fetchAISummary = async (id, title, overview) => {
     try {
-      const res = await fetch(
-        `https://api.themoviedb.org/3/movie/${movieId}/credits?api_key=${process.env.TMDB_KEY}`
-      );
+      const res = await fetch("/api/ai", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title, overview }),
+      });
       const data = await res.json();
-      const castNames = data.cast.slice(0, 3).map((actor) => actor.name).join(',');
-      setCastList((prev) => ({ ...prev, [movieId]: castNames }));
-    } catch (error) {
-      console.error('Failed to fetch cast:', error);
+      setAiSummaries((prev) => ({
+        ...prev,
+        [id]: data.summary || "AI could not generate summary",
+      }));
+    } catch (err) {
+      console.error("Error fetching AI summary:", err);
     }
   };
 
-  // Load and show trailer in modal
   const openTrailerModal = async (id) => {
-    const link = await getVideoLink(id, process.env.TMDB_KEY);
+    const link = await fetchMovieTrailer(id);
     if (link) {
       setSelectedTrailer(link);
       setIsModalOpen(true);
     } else {
-      alert('Trailer not available');
+      alert("Trailer not available");
     }
   };
 
@@ -55,7 +41,11 @@ function MovieCard({ Loading, AllmovieData }) {
 
   useEffect(() => {
     AllmovieData.forEach((movie) => {
-      if (movie.id && !castList[movie.id]) fetchCast(movie.id);
+      if (movie.id && !castList[movie.id]) {
+        fetchMovieCast(movie.id).then((cast) =>
+          setCastList((prev) => ({ ...prev, [movie.id]: cast }))
+        );
+      }
     });
   }, [AllmovieData]);
 
@@ -63,7 +53,11 @@ function MovieCard({ Loading, AllmovieData }) {
     <div>
       {Loading ? (
         <div className="flex justify-center">
-          <img className="py-20 w-16" src="https://i.gifer.com/ZZ5H.gif" alt="Loading..." />
+          <img
+            className="py-20 w-16"
+            src="https://i.gifer.com/ZZ5H.gif"
+            alt="Loading..."
+          />
         </div>
       ) : (
         <div className="flex flex-wrap px-4 lg:px-10">
@@ -71,9 +65,8 @@ function MovieCard({ Loading, AllmovieData }) {
             const { id, title, release_date, poster_path, vote_average, overview } = item;
             const posterUrl = poster_path
               ? `https://image.tmdb.org/t/p/w500${poster_path}`
-              : 'https://www.serieslike.com/img/shop_01.png';
-            const cast = castList[id] || 'Loading...';
-            const movieLink = `https://www.themoviedb.org/movie/${id}`;
+              : "https://www.serieslike.com/img/shop_01.png";
+            const cast = castList[id] || "Loading...";
 
             return (
               <div key={index} className="p-2 sm:w-full md:w-1/3 xl:w-1/4">
@@ -95,15 +88,17 @@ function MovieCard({ Loading, AllmovieData }) {
                   >
                     ▶ Watch Trailer
                   </button>
-
-                  {/* <a
-                    href={movieLink}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-block mt-3 text-blue-400 text-sm underline"
+                  <br />
+                  <button
+                    onClick={() => fetchAISummary(id, title, overview)}
+                    className="bg-green-600 hover:bg-green-700 mt-4 ml-2 px-3 py-1 rounded-md text-white text-sm"
                   >
-                    🔗 More Info
-                  </a> */}
+                    🤖 AI Summary
+                  </button>
+
+                  {aiSummaries[id] && (
+                    <p className="mt-2 text-gray-300 text-sm italic">{aiSummaries[id]}</p>
+                  )}
                 </div>
               </div>
             );
@@ -111,7 +106,6 @@ function MovieCard({ Loading, AllmovieData }) {
         </div>
       )}
 
-      {/* Trailer Modal */}
       {isModalOpen && selectedTrailer && (
         <div className="z-50 fixed inset-0 flex justify-center items-center bg-black bg-opacity-80 backdrop-blur-sm">
           <div className="relative mx-auto p-4 w-full max-w-3xl">
@@ -127,7 +121,7 @@ function MovieCard({ Loading, AllmovieData }) {
               title="Movie Trailer"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
-            ></iframe>
+            />
           </div>
         </div>
       )}
