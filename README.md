@@ -1,34 +1,73 @@
-# 🎬 MovieFlex – Smart Movie Explorer
+🎬 Movie-Flex
 
-**MovieFlex** is a responsive React-based movie app that lets users search and explore movies using real-time data from the TMDB API. Users can view movie posters, ratings, top cast, release year, short summaries, and even watch trailers in a fullscreen modal.
+A modern movie browsing app that fetches real-time movie data, allows searching, and showcases details in a clean UI. Built with React + TMDB API, deployed on Vercel.
 
----
+🌐 Live Demo: Movie-Flex
 
-## 🚀 Live Demo
+🚀 Features
 
-🔗 [Visit MovieFlex](https://akshay0dkd.github.io/MovieFlex/)
+🔎 Search movies by title
 
----
+🎥 View movie details (poster, release date, ratings, etc.)
 
-## 📌 Features
+📱 Responsive UI for desktop & mobile
 
-- 🔍 **Search Movies** – Search any movie by title using TMDB API.
-- ⭐ **Ratings & Cast** – Displays top 3 cast, rating, release year, and short overview.
-- 🎞 **Trailer Preview** – Click poster to view full-screen YouTube trailer.
-- 📱 **Responsive UI** – Optimized for mobile, tablet, and desktop using Tailwind CSS.
-- 🌐 **Deployed on GitHub Pages** – Easy access and sharing.
+⚡ Fast & optimized using React + Vite
 
----
+🔐 API key secured using environment variables & deployment best practices
 
-## 🛠 Tech Stack
+🛠️ Tech Stack
 
-- ⚛️ React.js + Vite
-- 🎨 Tailwind CSS
-- 🎥 TMDB API
-- 🧠 JavaScript (ES6)
-- 🌐 GitHub Pages
+Frontend: React, Vite, CSS
 
----
+API: TMDB API
 
+Deployment: Vercel
 
+Version Control: Git + GitHub
 
+📂 Project Structure
+MovieFlex/
+ ┣ src/
+ ┃ ┣ components/   # Reusable UI components (Nav, Searchbar, MovieCard, etc.)
+ ┃ ┣ pages/        # About, Contact pages
+ ┃ ┣ App.jsx
+ ┃ ┗ main.jsx
+ ┣ public/
+ ┣ package.json
+ ┗ README.md
+
+🔐 API Security & Management
+
+Environment variables (.env) used for API key safety
+
+Secure API calls (no direct exposure in frontend repo)
+
+Deployment secrets managed via Vercel
+
+📦 Deployment
+
+This project is deployed on Vercel with CI/CD enabled:
+
+Push changes to main branch
+
+Vercel auto-builds & deploys latest version
+
+Secrets & environment variables handled securely
+
+📚 What I Learned
+
+✔️ API Integration & Security – protecting keys, handling errors, validating inputs
+✔️ Project Management – modular components, clean commits, version control discipline
+✔️ Deployment Practices – environment management, CI/CD pipeline, rollback strategies
+✔️ Frontend Optimization – responsive design & fast rendering with Vite
+
+🚀 Future Improvements
+
+⭐ Add user authentication (login, signup)
+
+🎞️ Watchlist & favorites feature
+
+📝 Movie reviews & ratings
+
+🤖 AI-powered storyline generator & review sentiment analysis
