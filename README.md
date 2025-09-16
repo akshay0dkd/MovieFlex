@@ -64,10 +64,4 @@ Secrets & environment variables handled securely
 
 🚀 Future Improvements
 
-⭐ Add user authentication (login, signup)
-
-🎞️ Watchlist & favorites feature
-
-📝 Movie reviews & ratings
-
 🤖 AI-powered storyline generator & review sentiment analysis
